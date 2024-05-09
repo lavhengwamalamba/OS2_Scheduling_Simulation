@@ -4,6 +4,8 @@ package barScheduling;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
@@ -21,14 +23,16 @@ public class Patron extends Thread {
 	private int ID; //thread ID 
 	private int lengthOfOrder;
 	private long startTime, endTime, firstResponse; //for all the metrics
+	private int sched;
 	
 	public static FileWriter fileW;
 
 
 	private DrinkOrder [] drinksOrder;
 	
-	Patron( int ID,  CountDownLatch startSignal, Barman aBarman) {
+	Patron( int ID,  CountDownLatch startSignal, Barman aBarman, int sched) {
 		this.ID=ID;
+		this.sched = sched; // Getting the schedular from the simulation class
 		this.startSignal=startSignal;
 		this.theBarman=aBarman;
 		this.lengthOfOrder=random.nextInt(5)+1;//between 1 and 5 drinks
@@ -60,10 +64,17 @@ public class Patron extends Thread {
 	        }
 			System.out.println("Patron "+ this.ID + " submitting order of " + lengthOfOrder +" drinks"); //output in standard format  - do not change this
 	        startTime = System.currentTimeMillis();//started placing orders
+
+			if (sched != 0){
+				Arrays.sort(drinksOrder);
+			}
+
 			for(int i=0;i<lengthOfOrder;i++) {
 				System.out.println("Order placed by " + drinksOrder[i].toString());
 				theBarman.placeDrinkOrder(drinksOrder[i]);
 			}
+			long firstdrinkTime = drinksOrder[0].getExecutionTime(); //this is gonna be used to calculate the waiting time
+
 			for(int i=0;i<lengthOfOrder;i++) {
 				drinksOrder[i].waitForOrder();
 				if (i == 0){
@@ -73,7 +84,7 @@ public class Patron extends Thread {
 
 			endTime = System.currentTimeMillis();
 			long totalTime = endTime - startTime; //turnaround time
-			long responseTime = firstResponse - startTime; // response
+			long responseTime = firstResponse - startTime; // response time
 			
 			writeToFile( String.format("%d,%d,%d\n",ID,arrivalTime,totalTime));
 			System.out.println("Patron "+ this.ID + " got order in " + totalTime);

@@ -51,7 +51,7 @@ public class SchedulingSimulation {
 	    //create all the patrons, who all need access to Andre
 		patrons = new Patron[noPatrons];
 		for (int i=0;i<noPatrons;i++) {
-			patrons[i] = new Patron(i,startSignal,Andre);
+			patrons[i] = new Patron(i,startSignal,Andre,sched); // we are adding schedular to the constructor so that the patron knows how its done
 			patrons[i].start();
 		}
 		
