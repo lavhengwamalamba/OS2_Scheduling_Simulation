@@ -1,0 +1,19 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "SchedulingSimulation",
+      "request": "launch",
+      "mainClass": "barScheduling.SchedulingSimulation",
+      "projectName": "OS2_Scheduling_Simulation_2dfabe2b"
+    },
+    {
+      "name": "Python",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "",
+      "console": "integratedTerminal"
+    }
+  ]
+}

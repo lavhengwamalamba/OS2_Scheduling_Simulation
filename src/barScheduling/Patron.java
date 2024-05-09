@@ -20,7 +20,7 @@ public class Patron extends Thread {
 
 	private int ID; //thread ID 
 	private int lengthOfOrder;
-	private long startTime, endTime; //for all the metrics
+	private long startTime, endTime, firstResponse; //for all the metrics
 	
 	public static FileWriter fileW;
 
@@ -66,10 +66,14 @@ public class Patron extends Thread {
 			}
 			for(int i=0;i<lengthOfOrder;i++) {
 				drinksOrder[i].waitForOrder();
+				if (i == 0){
+					firstResponse = System.currentTimeMillis();
+				}
 			}
 
 			endTime = System.currentTimeMillis();
-			long totalTime = endTime - startTime;
+			long totalTime = endTime - startTime; //turnaround time
+			long responseTime = firstResponse - startTime; // response
 			
 			writeToFile( String.format("%d,%d,%d\n",ID,arrivalTime,totalTime));
 			System.out.println("Patron "+ this.ID + " got order in " + totalTime);

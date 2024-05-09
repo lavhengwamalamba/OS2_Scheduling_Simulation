@@ -27,6 +27,7 @@ public class SchedulingSimulation {
 	}
 
 	public static void main(String[] args) throws InterruptedException, IOException {
+		noPatrons = 15;
 		
 		
 

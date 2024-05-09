@@ -19,13 +19,19 @@ public class Barman extends Thread {
 	private CountDownLatch startSignal;
 	private BlockingQueue<DrinkOrder> orderQueue;
 
+	Comparator<DrinkOrder> comparator = new Comparator<DrinkOrder>() {
+		// @Override
+		public int compare(DrinkOrder order1, DrinkOrder order2) {
+			return Integer.compare(order1.getExecutionTime(), order2.getExecutionTime()); // Compares two strings lexicographically
+		}
+	};
 
 	
 	Barman(  CountDownLatch startSignal,int schedAlg) {
 		if (schedAlg==0)
 			this.orderQueue = new LinkedBlockingQueue<>();
 		//FIX below
-		else this.orderQueue = new LinkedBlockingQueue<>(); //this just does the same thing 
+		else this.orderQueue = new PriorityBlockingQueue<>(11,comparator);; //this just does the same thing 
 		
 	    this.startSignal=startSignal;
 	}
@@ -45,7 +51,7 @@ public class Barman extends Thread {
 
 			while(true) {
 				nextOrder=orderQueue.take();
-				System.out.println("---Barman preparing order for patron "+ nextOrder.toString());
+				System.out.println("---Barman preparing order for patron "+ nextOrder.toString()); 
 				sleep(nextOrder.getExecutionTime()); //processing order
 				System.out.println("---Barman has made order for patron "+ nextOrder.toString());
 				nextOrder.orderDone();
