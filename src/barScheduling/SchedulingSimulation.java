@@ -15,6 +15,8 @@ public class SchedulingSimulation {
 			
 	static CountDownLatch startSignal;
 
+	static int executionTotals; // this is for when we calculate throughput
+
 	
 	static Patron[] patrons; // array for customer threads
 	static Barman Andre;
@@ -28,7 +30,7 @@ public class SchedulingSimulation {
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		noPatrons = 15;
-		
+		sched = 1;
 		
 
 		//deal with command line arguments if provided
@@ -45,13 +47,13 @@ public class SchedulingSimulation {
 		startSignal= new CountDownLatch(noPatrons+2);//Barman and patrons and main method must be raeady
 		
 		//create barman
-        Andre= new Barman(startSignal,sched); 
+        Andre= new Barman(startSignal,sched,noPatrons); 
      	Andre.start();
   
 	    //create all the patrons, who all need access to Andre
 		patrons = new Patron[noPatrons];
 		for (int i=0;i<noPatrons;i++) {
-			patrons[i] = new Patron(i,startSignal,Andre,sched); // we are adding schedular to the constructor so that the patron knows how its done
+			patrons[i] = new Patron(i,startSignal,Andre,sched,executionTotals); // we are adding schedular to the constructor so that the patron knows how its done
 			patrons[i].start();
 		}
 		
@@ -68,7 +70,15 @@ public class SchedulingSimulation {
     	System.out.println("------Waiting for Andre------");
     	Andre.interrupt();   //tell Andre to close up
     	Andre.join(); //wait till he has
-      	writer.close(); //all done, can close file
+
+		// //After Andre closes up we can now get the throughput
+		// System.out.println("Execution times"+executionTotals);
+		// System.out.println("No patrons" + noPatrons);
+		// int throughput = executionTotals/noPatrons;
+		// System.out.println(throughput);
+
+      	
+		writer.close(); //all done, can close file
       	System.out.println("------Bar closed------");
 	}
 
