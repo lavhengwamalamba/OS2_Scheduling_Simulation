@@ -5,6 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * This class implements a background timer that periodically records counts and their respective time intervals
+ * to a specified file. It operates as a separate thread, periodically updating the count and time interval 
+ * information and writing it to the designated file.
+ */
+
+
 public class BackGroundTimer implements Runnable {
     private final AtomicInteger count;
     private final long delayMillis;
@@ -31,7 +38,7 @@ public class BackGroundTimer implements Runnable {
                     int currentCount = count.getAndSet(0); // Retrieve and reset count to 0
                     String line = timeInterval + "," + currentCount + "\n";
                     writer.write(line);
-                    timeInterval += 1000;
+                    timeInterval += delayMillis; // Increase the timeinterval for data recording
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

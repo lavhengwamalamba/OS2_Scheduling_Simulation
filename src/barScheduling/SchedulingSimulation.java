@@ -26,9 +26,7 @@ public class SchedulingSimulation {
 			writer.write(data);
 		}
 	}
-	// public void throughputTime(){
-	// schedular
-	// }
+
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		noPatrons = 10;
@@ -42,12 +40,12 @@ public class SchedulingSimulation {
 			sched = Integer.parseInt(args[1]);
 		}
 
-		BackGroundTimer task = new BackGroundTimer(count, 1000, "throughputs_" + Integer.toString(sched) + ".csv"); // 1
+		BackGroundTimer task = new BackGroundTimer(count, 10000, "throughputs_" + Integer.toString(sched)+"_with_"+ noPatrons + "_patrons.csv"); // 1
 																													// seconds
 																													// delay
 		Thread thread = new Thread(task);
 
-		writer = new FileWriter("turnaround_time_" + Integer.toString(sched) + ".csv", false);
+		writer = new FileWriter("turnaround_time_" + Integer.toString(sched) +"_with_"+ noPatrons + "_patrons.csv", false);
 		writer.write("Patron ID,Arrival Time,Turnaround Time,Waiting Time,Response Time\n");
 		Patron.fileW = writer;
 
@@ -79,8 +77,8 @@ public class SchedulingSimulation {
 		System.out.println("------Waiting for Andre------");
 		Andre.interrupt(); // tell Andre to close up
 		Andre.join(); // wait till he has
-		task.stop();
 		writer.close(); // all done, can close file
+		task.stop();
 		System.out.println("------Bar closed------");
 	}
 
