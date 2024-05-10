@@ -45,7 +45,7 @@ public class SchedulingSimulation {
 			sched=Integer.parseInt(args[1]); 
 		}
 
-		BackGroundTimer task = new BackGroundTimer(count, 1000); // 1 seconds delay
+		BackGroundTimer task = new BackGroundTimer(count, 1000, "throughputs_"+Integer.toString(sched)+".csv"); // 1 seconds delay
         Thread thread = new Thread(task);
 		
 		writer = new FileWriter("turnaround_time_"+Integer.toString(sched)+".txt", false);
