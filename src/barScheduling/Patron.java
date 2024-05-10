@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 // import barScheduling.DrinkOrder.Drink;
 
@@ -27,17 +28,19 @@ public class Patron extends Thread {
 	private int lengthOfOrder;
 	private long startTime, endTime, firstResponse; // for all the metrics
 	private int sched;
-	private int executionTotals;
+	private int executionTotalTime;
 	public static FileWriter fileW;
+	
+	private AtomicInteger count;
 
 	private DrinkOrder[] drinksOrder;
 
-	Patron(int ID, CountDownLatch startSignal, Barman aBarman, int sched, int executionTotals) {
+	Patron(int ID, CountDownLatch startSignal, Barman aBarman, int sched, AtomicInteger count) {
 		this.ID = ID;
 		this.sched = sched; // Getting the schedular from the simulation class
-		this.executionTotals=executionTotals;
 		this.startSignal = startSignal;
 		this.theBarman = aBarman;
+		this.count = count;
 		this.lengthOfOrder = random.nextInt(5) + 1;// between 1 and 5 drinks
 		drinksOrder = new DrinkOrder[lengthOfOrder];
 	}
@@ -63,7 +66,7 @@ public class Patron extends Thread {
 				drinksOrder[i] = new DrinkOrder(this.ID);
 				System.out.println(drinksOrder[i]);
 				System.out.println("******************************************"+drinksOrder[i].getExecutionTime());
-				executionTotals+=drinksOrder[i].getExecutionTime();
+				executionTotalTime+=drinksOrder[i].getExecutionTime();
 
 			}
 
@@ -71,6 +74,8 @@ public class Patron extends Thread {
 				// Arrays.sort(drinksOrder);
 				Arrays.sort(drinksOrder, Comparator.comparingInt(DrinkOrder::getExecutionTime)); // sorting the list if the schedular is for SJF
 			}
+
+			
 
 			System.out.println("Patron " + this.ID + " submitting order of " + lengthOfOrder + " drinks"); // output in
 																											// standard
@@ -84,8 +89,6 @@ public class Patron extends Thread {
 				System.out.println("Order placed by " + drinksOrder[i].toString());
 				theBarman.placeDrinkOrder(drinksOrder[i]);
 			}
-			long firstdrinkTime = drinksOrder[0].getExecutionTime(); // this is gonna be used to calculate the waiting
-																		// time
 
 			for (int i = 0; i < lengthOfOrder; i++) {
 				drinksOrder[i].waitForOrder();
@@ -93,11 +96,11 @@ public class Patron extends Thread {
 					firstResponse = System.currentTimeMillis();
 				}
 			}
-
+			count.incrementAndGet();
 			endTime = System.currentTimeMillis();
 			long totalTime = endTime - startTime; // turnaround time
 			long responseTime = firstResponse - startTime; // response time
-			long waitingTime = responseTime - firstResponse;
+			long waitingTime = responseTime - executionTotalTime;
 
 			writeToFile(String.format("%d,%d,%d,%d\n", ID, arrivalTime, totalTime,waitingTime));
 			System.out.println("Patron " + this.ID + " got order in " + totalTime);

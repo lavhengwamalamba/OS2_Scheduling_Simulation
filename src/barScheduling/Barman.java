@@ -62,12 +62,6 @@ public class Barman extends Thread {
 
 		} catch (InterruptedException e1) {
 			System.out.println("---Barman is packing up ");
-			// After Andre closes up we can now get the throughput
-			System.out.println("Execution times" + executionTotals);
-			System.out.println("No patrons" + noPatrons);
-			int throughput = executionTotals / noPatrons;
-			System.out.println(throughput);
-
 		}
 	}
 }

@@ -7,6 +7,7 @@ package barScheduling;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class SchedulingSimulation {
@@ -16,7 +17,7 @@ public class SchedulingSimulation {
 	static CountDownLatch startSignal;
 
 	static int executionTotals; // this is for when we calculate throughput
-
+	static AtomicInteger count = new AtomicInteger(0);
 	
 	static Patron[] patrons; // array for customer threads
 	static Barman Andre;
@@ -27,6 +28,9 @@ public class SchedulingSimulation {
 	    	writer.write(data);
 	    }
 	}
+	// public void throughputTime(){
+	// 	schedular 
+	// }
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		noPatrons = 15;
@@ -40,6 +44,9 @@ public class SchedulingSimulation {
 			noPatrons=Integer.parseInt(args[0]);  //total people to enter room
 			sched=Integer.parseInt(args[1]); 
 		}
+
+		BackGroundTimer task = new BackGroundTimer(count, 1000); // 1 seconds delay
+        Thread thread = new Thread(task);
 		
 		writer = new FileWriter("turnaround_time_"+Integer.toString(sched)+".txt", false);
 		Patron.fileW=writer;
@@ -49,11 +56,13 @@ public class SchedulingSimulation {
 		//create barman
         Andre= new Barman(startSignal,sched,noPatrons); 
      	Andre.start();
+		thread.start(); // Timer thread will strat from here
+
   
 	    //create all the patrons, who all need access to Andre
 		patrons = new Patron[noPatrons];
 		for (int i=0;i<noPatrons;i++) {
-			patrons[i] = new Patron(i,startSignal,Andre,sched,executionTotals); // we are adding schedular to the constructor so that the patron knows how its done
+			patrons[i] = new Patron(i,startSignal,Andre,sched,count); // we are adding schedular to the constructor so that the patron knows how its done
 			patrons[i].start();
 		}
 		
@@ -70,14 +79,7 @@ public class SchedulingSimulation {
     	System.out.println("------Waiting for Andre------");
     	Andre.interrupt();   //tell Andre to close up
     	Andre.join(); //wait till he has
-
-		// //After Andre closes up we can now get the throughput
-		// System.out.println("Execution times"+executionTotals);
-		// System.out.println("No patrons" + noPatrons);
-		// int throughput = executionTotals/noPatrons;
-		// System.out.println(throughput);
-
-      	
+      	task.stop();
 		writer.close(); //all done, can close file
       	System.out.println("------Bar closed------");
 	}
