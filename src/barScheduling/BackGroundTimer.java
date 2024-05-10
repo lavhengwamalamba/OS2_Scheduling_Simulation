@@ -17,7 +17,7 @@ public class BackGroundTimer implements Runnable {
         this.delayMillis = delayMillis;
         this.running = true;
         this.fileName = fileName;
-        this.timeInterval = 100;
+        this.timeInterval = delayMillis;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class BackGroundTimer implements Runnable {
                     int currentCount = count.getAndSet(0); // Retrieve and reset count to 0
                     String line = timeInterval + "," + currentCount + "\n";
                     writer.write(line);
-                    timeInterval += 100;
+                    timeInterval += 1000;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
