@@ -23,7 +23,7 @@ public class Barman extends Thread {
 	Comparator<DrinkOrder> comparator = new Comparator<DrinkOrder>() {
 		// @Override
 		public int compare(DrinkOrder order1, DrinkOrder order2) {
-			return Integer.compare(order1.getExecutionTime(), order2.getExecutionTime()); // Compares two strings
+			return Integer.compare(order1.getExecutionTime(), order2.getExecutionTime()); // Compares two integer
 																							// lexicographically
 		}
 	};

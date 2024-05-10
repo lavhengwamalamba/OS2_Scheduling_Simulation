@@ -33,7 +33,7 @@ public class SchedulingSimulation {
 	// }
 
 	public static void main(String[] args) throws InterruptedException, IOException {
-		noPatrons = 15;
+		noPatrons = 100;
 		sched = 1;
 		
 
@@ -48,7 +48,8 @@ public class SchedulingSimulation {
 		BackGroundTimer task = new BackGroundTimer(count, 1000, "throughputs_"+Integer.toString(sched)+".csv"); // 1 seconds delay
         Thread thread = new Thread(task);
 		
-		writer = new FileWriter("turnaround_time_"+Integer.toString(sched)+".txt", false);
+		writer = new FileWriter("turnaround_time_"+Integer.toString(sched)+".csv", false);
+		writer.write("Patron ID,Arrival Time,Turnaround Time,Waiting Time,Response Time\n");
 		Patron.fileW=writer;
 
 		startSignal= new CountDownLatch(noPatrons+2);//Barman and patrons and main method must be raeady
