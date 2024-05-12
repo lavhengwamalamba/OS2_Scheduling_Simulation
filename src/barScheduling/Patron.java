@@ -67,7 +67,7 @@ public class Patron extends Thread {
 				// System.out.println(drinksOrder[i]);
 				// System.out.println("******************************************"+drinksOrder[i].getExecutionTime());
 				executionTotalTime+=drinksOrder[i].getExecutionTime();
-				// System.out.println("llllllllllllllllllllllllllllllllllllllllllllllllllllllll"+executionTotalTime);
+				// // System.out.println("llllllllllllllllllllllllllllllllllllllllllllllllllllllll"+executionTotalTime);
 
 			}
 

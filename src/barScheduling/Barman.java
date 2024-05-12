@@ -55,7 +55,7 @@ public class Barman extends Thread {
 				nextOrder = orderQueue.take();
 				System.out.println("---Barman preparing order for patron " + nextOrder.toString());
 				sleep(nextOrder.getExecutionTime()); // processing order
-				executionTotals += nextOrder.getExecutionTime();
+				executionTotals += nextOrder.getExecutionTime();// WHAT IS THIS LINE DOING.........!!!!!!!12
 				System.out.println("---Barman has made order for patron " + nextOrder.toString());
 				nextOrder.orderDone();
 			}
