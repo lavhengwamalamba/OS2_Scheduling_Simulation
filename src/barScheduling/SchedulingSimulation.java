@@ -40,12 +40,12 @@ public class SchedulingSimulation {
 			sched = Integer.parseInt(args[1]);
 		}
 
-		BackGroundTimer task = new BackGroundTimer(count, 10000, "tttttthroughputs_" + Integer.toString(sched)+"_with_"+ noPatrons + "_patrons.csv"); // 1
+		BackGroundTimer task = new BackGroundTimer(count, 10000, "throughputs_" + Integer.toString(sched)+"_with_"+ noPatrons + "_patrons.csv"); // 1
 																													// seconds
 																													// delay
 		Thread thread = new Thread(task);
 
-		writer = new FileWriter("tttttmetric_times_" + Integer.toString(sched) +"_with_"+ noPatrons + "_patrons.csv", false);
+		writer = new FileWriter("metric_times_" + Integer.toString(sched) +"_with_"+ noPatrons + "_patrons.csv", false);
 		writer.write("Patron ID,Arrival Time,Turnaround Time,Waiting Time,Response Time\n");
 		Patron.fileW = writer;
 
